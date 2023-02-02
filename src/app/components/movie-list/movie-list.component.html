@@ -1,1 +1,233 @@
-<p>movie-list works!</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Frontend</title>
+  <base href="/">
+  <meta content="width=device-width,
+initial-scale=1" name="viewport">
+
+  <!-- Bootstrap CSS -->
+  <link
+    crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstra
+p.min.css"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZ
+OJ3BCsw2P0p/We" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <script crossorigin="anonymous"
+
+          src="https://kit.fontawesome.com/e8eb5ffc81.js"></script>
+
+  <link href="favicon.ico" rel="icon" type="image/x-icon">
+</head>
+
+<body>
+  <app-root></app-root>
+
+  <div class="container-fluid">
+    <div class="w-100 d-flex">
+      <h3 class="mt-2 d-inline-block me-auto">{{movies.length}}
+        películas</h3>
+      <h3 (click)="newMovie()"
+          class="d-inline-block ms-auto pointer"
+          data-bs-target="#miModal"
+          data-bs-toggle="modal"> Add movie
+        <i class="fas fa-plus-circle pointer"></i></h3>
+    </div>
+
+    <div *ngFor="let movie of movies"
+         class="container">
+      <div class="row border rounded">
+        <div class="col-md-11">
+          <div (click)="loadMovie(movie)" class="row mt-3 pt-2"
+               data-bs-target="#miModal" data-bs-toggle="modal">
+            <div class="col-md-2">
+              <img alt="{{movie.title}}"
+                   src="{{movie.poster || 'assets/images/no-image-icon.jpg'}}">
+            </div>
+            <div class="col-md-9">
+              <h5>{{movie.title}}</h5>
+              <small class="text-danger">{{movie.genres}}</small>
+              <p><b>Director</b>: {{movie.director}} - <b>Year</b>: {{movie.year}}</p>
+              <small>{{movie.plot}}</small>
+            </div>
+            <div class="col-md-1 align-self-center align-middle">
+              <small class="badge bg-success p-3">{{movie.imdb.rating}}</small>
+            </div>
+            <div class="pb-2"></div>
+          </div>
+        </div>
+
+        <div class="col-md-1 remove d-flex">
+          <h3 class="ms-auto align-self-center">
+            <i (click)="removeMovie(movie)"
+               class="fas fa-times"></i></h3>
+        </div>
+      </div>
+
+      <div class="mb-2"></div>
+    </div>
+    <!-- Fin del NgFor -->
+
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="miModalLabel"
+         class="modal fade" id="miModal"
+         tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <h5 class="modal-title" id="miModalLabel">
+              {{editar?formMovie.getRawValue().title:'New Movie'}}</h5>
+
+            <button aria-label="Close"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    type="button"></button>
+
+          </div>
+          <form (ngSubmit)="onSubmit()" [formGroup]="formMovie">
+            <div class="modal-body">
+              <div class="form-floating mb-3">
+                <input class="form-control"
+                       formControlName="title" id="title"
+                       placeholder="Title" type="text"
+                       value="{{formMovie.getRawValue().title}}">
+                <label for="title">
+                  Title</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input class="form-control"
+
+                       formControlName="year" id="year"
+                       placeholder="Year" type="number"
+                       value="{{formMovie.getRawValue().year}}">
+                <label for="year">Year</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input class="form-control"
+                       formControlName="director" id="director"
+                       placeholder="Director"
+                       type="text"
+                       value="{{formMovie.getRawValue().director}}">
+                <label for="director">
+                  Director</label>
+              </div>
+
+              <div class="row">
+                <div class="col-8">
+                  <div class="form-floating mb-3">
+                    <input class="form-control"
+                           formControlName="poster" id="poster"
+                           placeholder="Poster"
+                           type="text"
+                           value="{{formMovie.getRawValue().poster}}">
+                    <label for="poster">
+                      Poster</label>
+                  </div>
+
+                </div>
+                <div class="col-4">
+                  <img alt="..." src="{{formMovie.getRawValue().poster || 'assets/images/no-image-icon.jpg'}}">
+                </div>
+              </div>
+              <div class="form-floating mb-3 mt-3">
+                <textarea class="form-control"
+                          formControlName="plot"
+                          id="plot"
+                          rows="7"
+                          value="{{formMovie.getRawValue().plot}}">
+                </textarea>
+                <label for="plot">
+                  Plot</label>
+              </div>
+
+              <!-- select genres -->
+              <div *ngIf="editar">
+                <label for="Select">Genres</label>
+                <select aria-label="Genres" class="form-select"
+                        formControlName="genres" id="Select"
+                        multiple>
+                  <option *ngFor="let gen of formMovie.getRawValue().genres"
+
+                          [value]="gen">
+                    {{gen}}</option>
+                </select>
+              </div>
+              <div *ngIf="!editar">
+                <label for="newSelect">Genres</label>
+                <select aria-label="Genres" class="form-select"
+                        formControlName="genres" id="newSelect"
+                        multiple>
+                  <option *ngFor="let gen of genres"
+
+                          [value]="gen">
+                    {{gen}}</option>
+                </select>
+              </div>
+
+              <!-- Add New Genre -->
+              <div class="row mt-3">
+                <div class="col-md-8">
+                  <div [formGroup]="mynewGenre" class="form-floating mb-3">
+                    <input
+                      class="form-control" formControlName="newGenre"
+                      id="newGenre"
+                      placeholder="New Genre"
+                      type="text"
+
+                      value="">
+                    <label for="newGenre">
+                      New Genre</label>
+                  </div>
+
+                </div>
+                <!-- <div class="col-md-4 mt-2">
+                  <h3><i (click)="addNewGenre(mynewGenre.getRawValue().newGenre)"
+                         class="fas fa-plus-circle pointer"></i></h3>
+                </div> -->
+              </div>
+
+              <fieldset formGroupName="imdb">
+                <legend>IMDB</legend>
+                <div class="form-floating mb-3">
+                  <input class="form-control"
+                         formControlName="rating" id="rating"
+                         placeholder="Rating"
+                         type="number"
+                         value="{{formMovie.getRawValue().imdb.rating}}">
+                  <label for="rating">
+                    Rating</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input class="form-control"
+                         formControlName="votes" id="votes"
+                         placeholder="Votes"
+                         type="number"
+                         value="{{formMovie.getRawValue().imdb.votes}}">
+                  <label for="votes">
+                    Votes</label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="modal-footer">
+
+              <button class="btn btn-secondary" data-bs-dismiss="modal"
+                      type="button">Close</button>
+              <button class="btn btn-primary" data-bs-dismiss="modal"
+                      type="submit">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script
+    crossorigin="anonymous"
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvH
+  U5awsuZVVFIhvj" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.
+  bundle.min.js"></script>
+</body>
+</html>
