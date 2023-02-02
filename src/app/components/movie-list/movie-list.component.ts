@@ -36,7 +36,7 @@ export class MovieListComponent implements OnInit {
 // Creamos el array que guardara todos los géneros que tenemos en la base de datos
   genres: string[] = [];
 
-// Creamos la variable editar para diferenciar
+// Creamos la variable editar para diferencia cuando se esta editando y cuando no
 // Editar de nueva película
   editar = false;
 

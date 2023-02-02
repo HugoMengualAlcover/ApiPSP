@@ -1,6 +1,11 @@
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
 import {Movie} from "../common/movie";
+import {Observable} from "rxjs";
+import {Injectable} from "@angular/core";
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class MovieService {
   baseURL = 'http://localhost:3000/api/movies';

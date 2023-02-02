@@ -149,10 +149,7 @@ OJ3BCsw2P0p/We" rel="stylesheet">
                 <select aria-label="Genres" class="form-select"
                         formControlName="genres" id="Select"
                         multiple>
-                  <option *ngFor="let gen of formMovie.getRawValue().genres"
-
-                          [value]="gen">
-                    {{gen}}</option>
+                  <option *ngFor="let gen of formMovie.getRawValue().genres" [value]="gen">{{gen}}</option>
                 </select>
               </div>
               <div *ngIf="!editar">
@@ -176,7 +173,6 @@ OJ3BCsw2P0p/We" rel="stylesheet">
                       id="newGenre"
                       placeholder="New Genre"
                       type="text"
-
                       value="">
                     <label for="newGenre">
                       New Genre</label>
